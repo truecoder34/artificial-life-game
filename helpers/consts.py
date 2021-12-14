@@ -1,0 +1,17 @@
+# CELLS
+N = 25                      # default
+MAX_FOOD_IN_CELL = 15       # generates it randomly 1..15
+INITIAL_AGENTS_COUNT = 1
+PART_OF_CELLS_WITH_FOOD = 0.4 * N * N   #  only 0.4 of total cells are with food
+
+# ACTORS 
+INITIAL_AGENTS_COUNT = 1
+MAX_MENTAL_HEALTH = 15
+MAX_PHISICAL_HEALTH = 30
+
+SPLIT_COEFFICIENT_PHISICAL = 0.8
+
+DECREMENT_PHISICAL_HEALTH = 0.8 * MAX_PHISICAL_HEALTH   # when split
+DECREMENT_MENTAL_HEALTH = 1     # when move
+
+UPDATE_INTERVAL = 1000
