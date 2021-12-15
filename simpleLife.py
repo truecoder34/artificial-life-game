@@ -16,6 +16,7 @@ import matplotlib.animation as animation
 
 from conwayGameOfLife import randomGrid
 from helpers.consts import *
+from helpers.helper import create2dimFieldOfCells
 from structures.agent import Agent
 from structures.field import Field
 
@@ -34,7 +35,7 @@ class Simulation:
         self.foody_cells = part_foody_cells
         self.upd_interval = update_interval
 
-        self.agents_alive = []
+        self.agents_alive = set()
 
     def clean(self, ax):
         '''
@@ -64,43 +65,59 @@ class Simulation:
     def update(self, frameNum, img, grid_np, grid, field, ax):
         # copy grid since we require 8 neighbors for calculation
         # and we go line by line
-        newGrid = grid.copy()
-        newGrid_np = grid_np.copy()
 
-        # ax.plot(agent.x, agent.y, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="green")
 
         # redraw previous state before new move !
 
-        print("[STATE-BEFORE]Currently alive agents {} . Total quantity = {}".format(self.agents_alive, len(self.agents_alive)))
+        print("[STATE-BEFORE]Currently alive agents {} . Total quantity = {}".format(self.agents_alive,
+                                                                                     len(self.agents_alive)))
         print("[STATE-BEFORE]Currently alive agents {} . ".format(list(map(lambda x: x.name, self.agents_alive))))
 
         self.clean(ax)
         self.drawAgents(self.agents_alive, ax)
 
+
+
         print('[DEBUG] Quantity of acting ACTORS = {}'.format(len(self.agents_alive)))
-        new_agents = []
-        updated_agents = []
+        print('[DEBUG-STATE] {}/{} . {} - max allowed agents quantity '.format(len(self.agents_alive), field.max_agents,
+                                                                               field.max_agents))
+
+        new_agents = set()
+        updated_agents = set()
         # each alive agent will act ordered by age
         for agent in self.agents_alive:
             result = agent.act(field)
             # process results before next step
             for key, value in result.items():
                 if key == "field" and value is not None:
-                    updated_agents.append(result['agent'])
+                    updated_agents.add(result['agent'])
                 elif key == "agent" and value is not None:
                     # update fields of existing agent by new values
-                    updated_agents.append(result['agent'])
+                    updated_agents.add(result['agent'])
 
                 elif key == "new_agent" and value is not None:
-                    new_agents.append(result['new_agent'])
+                    new_agents.add(result['new_agent'])
 
         if len(new_agents) > 0 or len(updated_agents) > 0:
-            print('[STATE-MIDDLE] Before overrding list of agents : {} . Total quantity = {}'.format(self.agents_alive, len(self.agents_alive)))
+            print('[STATE-MIDDLE] Before overriding list of agents : {} . Total quantity = {}'.format(self.agents_alive,
+                                                                                                     len(self.agents_alive)))
             print("[STATE-MIDDLE]Currently alive agents {} . ".format(list(map(lambda x: x.name, self.agents_alive))))
-            self.agents_alive = updated_agents + new_agents
+            self.agents_alive = updated_agents.union(new_agents)
 
-        print("[STATE-AFTER]Currently alive agents {} . Total quantity = {}".format(self.agents_alive, len(self.agents_alive)))
+            field.agents = len(self.agents_alive)
+
+        print("[STATE-AFTER]Currently alive agents {} . Total quantity = {}".format(self.agents_alive,
+                                                                                    len(self.agents_alive)))
         print("[STATE-AFTER]Currently alive agents {} . ".format(list(map(lambda x: x.name, self.agents_alive))))
+
+
+        newGrid = grid.copy()
+        newGrid_np = grid_np.copy()
+
+        # field update - each turn - random update
+        # polygon, polygon_arr = create2dimFieldOfCells(self.n_dim)
+        # polygon_arr_np = np.array(polygon_arr)
+
 
         img.set_data(newGrid_np)
         grid[:] = newGrid_np[:]
@@ -118,7 +135,7 @@ class Simulation:
         agent = Agent(uuid.uuid4(), self.n_dim, MAX_PHISICAL_HEALTH, MAX_MENTAL_HEALTH, SPLIT_COEFFICIENT_PHISICAL,
                       MAX_PHISICAL_HEALTH, MAX_MENTAL_HEALTH)
 
-        self.agents_alive.append(agent)
+        self.agents_alive.add(agent)
 
         polygon_arr_np = np.array(polygon_arr)  # move polygon to NP array.
         fig, ax = plt.subplots()  # draw initial field
@@ -129,6 +146,13 @@ class Simulation:
                                       frames=10,
                                       interval=self.upd_interval,
                                       save_count=50)                 # set up animation
+
+        # # of frames?
+        # set output file
+
+
+
+
         plt.show()
 
 
@@ -155,6 +179,8 @@ def main():
     # grid = np.array([])
     sim = Simulation(N_size)
     sim.run()
+
+
 
 
 if __name__ == '__main__':
