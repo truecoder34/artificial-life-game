@@ -121,9 +121,11 @@ class Agent:
             "agent": None,
             "new_agent": None
         }
+
         print('[DEBUG] Agent {} in cell X:{} - Y:{} is acting...'.format(self.name, self.x, self.y))
 
-        if self.phisical_health > self.split_coef_phisical * self.max_phisical_health:
+
+        if self.phisical_health > self.split_coef_phisical * self.max_phisical_health and field.agents < field.max_agents:
             print('[DEBUG] Agent {} in cell X:{} - Y:{} do SPLIT'.format(self.name, self.x, self.y))
             result['new_agent'] = self.split()
             result['agent'] = self

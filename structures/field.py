@@ -1,4 +1,6 @@
 import random
+
+from helpers.consts import MAX_AGENTS_COUNT
 from helpers.helper import create2dimFieldOfCells, random2dPoints
 from structures.cell import Cell
 
@@ -12,6 +14,7 @@ class Field:
 
         self.polygon, self.polygon_arr = create2dimFieldOfCells(N_dim)
         self.agents = self.start_agents_count
+        self.max_agents = MAX_AGENTS_COUNT
 
     def create_food(self, quantity):
         """
