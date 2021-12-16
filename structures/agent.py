@@ -1,6 +1,8 @@
 import random
 import uuid
 
+from helpers.consts import MAX_DEAD_TICKS
+
 
 class Agent:
     def __init__(self, name, n_dim, phisical, mental, split_coef_phisical, max_phisical_health, max_mental_health):
@@ -16,6 +18,8 @@ class Agent:
         self.split_coef_phisical = split_coef_phisical
         self.max_phisical_health = max_phisical_health
         self.max_mental_health = max_mental_health
+
+        self.dead_ticks = 0
 
         self.action_to_do = {}
 
@@ -125,6 +129,8 @@ class Agent:
         print('[DEBUG] Agent {} in cell X:{} - Y:{} is acting...'.format(self.name, self.x, self.y))
 
 
+
+
         if self.phisical_health > self.split_coef_phisical * self.max_phisical_health and field.agents < field.max_agents:
             print('[DEBUG] Agent {} in cell X:{} - Y:{} do SPLIT'.format(self.name, self.x, self.y))
             result['new_agent'] = self.split()
@@ -150,6 +156,12 @@ class Agent:
 
         # else:
         #     self.split()
+
+        if self.state == False and self.dead_ticks < MAX_DEAD_TICKS:
+            self.dead_ticks += 1
+        elif self.dead_ticks == MAX_DEAD_TICKS:
+            print('[DEBUG] Agent {} in cell X:{} - Y:{} IS DEAD'.format(self.name, self.x, self.y))
+            result['die'] = True
 
         return result
 

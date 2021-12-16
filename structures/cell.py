@@ -25,5 +25,5 @@ class Cell:
                 self.food = self.max_food
             else:
                 self.food = self.food + val
-        print("[DEBUG] CELL: x-{} y-{} : Food data updatad. New value = {}".format(self.x, self.y, self.food))
+        print("[DEBUG] CELL: x-{} y-{} : Food data updated. New value = {}".format(self.x, self.y, self.food))
 
