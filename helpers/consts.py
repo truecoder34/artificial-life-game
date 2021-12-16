@@ -1,8 +1,8 @@
 # CELLS
 N = 25                      # default
-MAX_FOOD_IN_CELL = 15       # generates it randomly 1..15
+MAX_FOOD_IN_CELL = 5       # generates it randomly 1..15
 INITIAL_AGENTS_COUNT = 1
-PART_OF_CELLS_WITH_FOOD = 0.4 * N * N   #  only 0.4 of total cells are with food
+PART_OF_CELLS_WITH_FOOD = 0.1 * N * N   #  only 0.4 of total cells are with food
 
 # ACTORS 
 INITIAL_AGENTS_COUNT = 1
@@ -17,3 +17,5 @@ DECREMENT_MENTAL_HEALTH = 1     # when move
 UPDATE_INTERVAL = 1000
 
 MAX_AGENTS_COUNT = 8
+
+MAX_DEAD_TICKS = 3          # Agent with 0 mental health will die after 3 ticks

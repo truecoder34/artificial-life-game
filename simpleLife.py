@@ -76,8 +76,6 @@ class Simulation:
         self.clean(ax)
         self.drawAgents(self.agents_alive, ax)
 
-
-
         print('[DEBUG] Quantity of acting ACTORS = {}'.format(len(self.agents_alive)))
         print('[DEBUG-STATE] {}/{} . {} - max allowed agents quantity '.format(len(self.agents_alive), field.max_agents,
                                                                                field.max_agents))
@@ -94,13 +92,14 @@ class Simulation:
                 elif key == "agent" and value is not None:
                     # update fields of existing agent by new values
                     updated_agents.add(result['agent'])
-
                 elif key == "new_agent" and value is not None:
                     new_agents.add(result['new_agent'])
+                elif key == "die" and value == True:
+                    pass
 
         if len(new_agents) > 0 or len(updated_agents) > 0:
-            print('[STATE-MIDDLE] Before overriding list of agents : {} . Total quantity = {}'.format(self.agents_alive,
-                                                                                                     len(self.agents_alive)))
+            print('[STATE-MIDDLE] Before overriding list of agents : {} . '
+                  'Total quantity = {}'.format(self.agents_alive, len(self.agents_alive)))
             print("[STATE-MIDDLE]Currently alive agents {} . ".format(list(map(lambda x: x.name, self.agents_alive))))
             self.agents_alive = updated_agents.union(new_agents)
 
@@ -110,14 +109,17 @@ class Simulation:
                                                                                     len(self.agents_alive)))
         print("[STATE-AFTER]Currently alive agents {} . ".format(list(map(lambda x: x.name, self.agents_alive))))
 
+        # newGrid = grid.copy()
+        # newGrid_np = grid_np.copy()
+        field.check_cells_food_state()
+        polygon_arr_cells, polygon_arr_np = field.create_food(2)
 
-        newGrid = grid.copy()
-        newGrid_np = grid_np.copy()
-
+        #field.create_food(field.agents)
         # field update - each turn - random update
-        # polygon, polygon_arr = create2dimFieldOfCells(self.n_dim)
-        # polygon_arr_np = np.array(polygon_arr)
+        #polygon, polygon_arr = create2dimFieldOfCells(self.n_dim)
+        #polygon_arr_np = np.array(polygon_arr)
 
+        newGrid_np = polygon_arr_np.copy()
 
         img.set_data(newGrid_np)
         grid[:] = newGrid_np[:]
