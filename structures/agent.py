@@ -123,7 +123,8 @@ class Agent:
         result = {
             "field": None,
             "agent": None,
-            "new_agent": None
+            "new_agent": None,
+            "die" : None
         }
 
         print('[DEBUG] Agent {} in cell X:{} - Y:{} is acting...'.format(self.name, self.x, self.y))
