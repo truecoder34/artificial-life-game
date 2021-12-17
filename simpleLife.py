@@ -16,7 +16,7 @@ import matplotlib.animation as animation
 
 from conwayGameOfLife import randomGrid
 from helpers.consts import *
-from helpers.helper import create2dimFieldOfCells
+from helpers.helper import create2dimFieldOfCells, polygon_of_cells_2_colors_2d
 from structures.agent import Agent
 from structures.field import Field
 
@@ -82,6 +82,7 @@ class Simulation:
 
         new_agents = set()
         updated_agents = set()
+        dead_agents = set()
         # each alive agent will act ordered by age
         for agent in self.agents_alive:
             result = agent.act(field)
@@ -95,7 +96,10 @@ class Simulation:
                 elif key == "new_agent" and value is not None:
                     new_agents.add(result['new_agent'])
                 elif key == "die" and value == True:
-                    pass
+                    dead_agents.add(agent)
+                    print("[DEBUG] >>>>>>>>>> DEAD AGENTS ", dead_agents)
+                    print("[DEBUG] >>>>>>>>>> DEAD AGENTS {} . ".format(
+                        list(map(lambda x: x.name, dead_agents))))
 
         if len(new_agents) > 0 or len(updated_agents) > 0:
             print('[STATE-MIDDLE] Before overriding list of agents : {} . '
@@ -105,12 +109,22 @@ class Simulation:
 
             field.agents = len(self.agents_alive)
 
+        if len(dead_agents) > 0:
+            #remove_dead = self.agents_alive - dead_agents
+            self.agents_alive = self.agents_alive - dead_agents
+            print('[STATE-MIDDLE.2] REMOVE DEAD AGENTS : {} . '
+                  'Total quantity = {}'.format(dead_agents, len(dead_agents)))
+            print("[STATE-MIDDLE.2]Currently dead agents {} . ".format(list(map(lambda x: x.name, dead_agents))))
+            field.agents = len(self.agents_alive)
+
         print("[STATE-AFTER]Currently alive agents {} . Total quantity = {}".format(self.agents_alive,
                                                                                     len(self.agents_alive)))
         print("[STATE-AFTER]Currently alive agents {} . ".format(list(map(lambda x: x.name, self.agents_alive))))
 
         # newGrid = grid.copy()
         # newGrid_np = grid_np.copy()
+
+        # -- verify field.  Updated colors . If food in cell ended - turn it off.
         field.check_cells_food_state()
         polygon_arr_cells, polygon_arr_np = field.create_food(2)
 
@@ -133,18 +147,23 @@ class Simulation:
             _1 - agent check for food, eat once or move towards to food or randomly
         """
         field = Field(self.n_dim, self.max_food, self.agents_in_game, self.foody_cells)
-        polygon, polygon_arr = field.polygon, field.polygon_arr
+
+        #polygon, polygon_arr = field.polygon, field.polygon_arr
+        polygon = field.polygon
+        polygon_colors = polygon_of_cells_2_colors_2d(polygon)
+
         agent = Agent(uuid.uuid4(), self.n_dim, MAX_PHISICAL_HEALTH, MAX_MENTAL_HEALTH, SPLIT_COEFFICIENT_PHISICAL,
                       MAX_PHISICAL_HEALTH, MAX_MENTAL_HEALTH)
 
         self.agents_alive.add(agent)
 
-        polygon_arr_np = np.array(polygon_arr)  # move polygon to NP array.
+        polygon_colors_np = np.array(polygon_colors)  # move polygon to NP array.
         fig, ax = plt.subplots()  # draw initial field
-        img = ax.imshow(polygon_arr_np, interpolation='nearest')
+        print("[DEBUG] INITIAL FIELD COLOR STATE ", polygon_colors_np)
+        img = ax.imshow(polygon_colors_np, interpolation='nearest')
 
         ani = animation.FuncAnimation(fig, self.update,
-                                      fargs=(img, polygon_arr_np, polygon_arr, field, ax),
+                                      fargs=(img, polygon_colors_np, polygon_colors, field, ax),
                                       frames=10,
                                       interval=self.upd_interval,
                                       save_count=50)                 # set up animation

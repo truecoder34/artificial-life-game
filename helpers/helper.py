@@ -1,5 +1,5 @@
 import random
-from helpers.consts import PART_OF_CELLS_WITH_FOOD, MAX_FOOD_IN_CELL
+from helpers.consts import PART_OF_CELLS_WITH_FOOD, MAX_FOOD_IN_CELL, FOOD_COLOR_MAP
 import numpy as np
 from structures.cell import Cell
 
@@ -29,25 +29,32 @@ def create2dimFieldOfCells(size):
         return :  2 dim array of CELLS;
     """
     polygon = []
-    polygon_arr = []
     cells_with_food = random2dPoints(size)
 
     for i in range(size):
         polygon_row = []
-        polygon_arr_row = []
         for j in range(size):
             if [i, j] in cells_with_food:
                 food_to_cell = random.randint(1, MAX_FOOD_IN_CELL)
-                cell = Cell(i, j, food_to_cell, 255, MAX_FOOD_IN_CELL)
-                val = 255
+                cell = Cell(i, j, food_to_cell, FOOD_COLOR_MAP[food_to_cell], MAX_FOOD_IN_CELL)
             else:
                 cell = Cell(i, j, 0, 0, MAX_FOOD_IN_CELL)
-                val = 0
 
             polygon_row.append(cell)
-            polygon_arr_row.append(val)
 
         polygon.append(polygon_row)
-        polygon_arr.append(polygon_arr_row)
 
-    return polygon, polygon_arr
+    return polygon
+
+
+def polygon_of_cells_2_colors_2d(field):
+    """
+        2-D Cells array (field) --to->  2-D Colors array
+    """
+    result = []
+    for row in field:
+        result_row = []
+        for cell in row:
+            result_row.append(cell.color)
+        result.append(result_row)
+    return result

@@ -9,11 +9,12 @@ class Cell:
         self.max_food = max_food
     
     def decrementFood(self, val=1):
-        '''
+        """
             Decrement food level in Cell by value (default 1)
-            if Afent stays in cell should be happened
-        '''
+            if Agent stays in cell should be happened
+        """
         self.food = self.food - val
+        print("[DEBUG] CELL: x-{} y-{} : Food data updated - Decrement. New value = {}".format(self.x, self.y, self.food))
     
     def incrementFood(self, val=0):
         '''
@@ -25,5 +26,5 @@ class Cell:
                 self.food = self.max_food
             else:
                 self.food = self.food + val
-        print("[DEBUG] CELL: x-{} y-{} : Food data updated. New value = {}".format(self.x, self.y, self.food))
+        print("[DEBUG] CELL: x-{} y-{} : Food data updated - Increment. New value = {}".format(self.x, self.y, self.food))
 
