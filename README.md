@@ -21,7 +21,7 @@ See WIKI for detailes abot Conway's Life: https://conwaylife.com/wiki/Gosper_gli
 ### Details and Rules
 **Terms**: Field, Cell, Agent<br/>
 
-![Artificial Life Example](https://raw.githubusercontent.com/truecoder34/artificial-life-game/main/screen.png)
+![Artificial Life Example](https://raw.githubusercontent.com/truecoder34/artificial-life-game/develop/screen.png)
 
 **Agent** - acting model. Has Physical and Mental health. <br/>
 Can make 3 actions: Move, Split, Eat
