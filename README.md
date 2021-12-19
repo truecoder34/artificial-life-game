@@ -40,3 +40,26 @@ Can make 3 actions: Move, Split, Eat
 + Should be renewable : per tick 2 foody cells creates randomly (this value can be changed)
 
 
+### Deafault sconditions
+```N = 25                   # default field size
+MAX_FOOD_IN_CELL = 5       	# Max food value in cell
+FOOD_COLOR_MAP = {
+    0: 0,
+    1: 51,
+    2: 102,
+    3: 153,
+    4: 204,
+    5: 255
+}							# Color gradient depends on food quantity in cell
+INITIAL_AGENTS_COUNT = 1	# 1 agent creates when simulation starts
+PART_OF_CELLS_WITH_FOOD = 0.1 * N * N   #  only 0.1 of total cells are with food initialt
+INITIAL_AGENTS_COUNT = 1
+MAX_MENTAL_HEALTH = 15
+MAX_PHISICAL_HEALTH = 30
+SPLIT_COEFFICIENT_PHISICAL = 0.8
+DECREMENT_PHISICAL_HEALTH = 0.8 * MAX_PHISICAL_HEALTH   # when split
+DECREMENT_MENTAL_HEALTH = 1     # when move
+UPDATE_INTERVAL = 1000
+MAX_AGENTS_COUNT = 8
+MAX_DEAD_TICKS = 3 
+```
